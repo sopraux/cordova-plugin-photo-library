@@ -220,9 +220,14 @@ final class PhotoLibraryService {
                         completion(nil)
                     }
                     else {
+                      if #available(iOS 13, *) {
+                        let file_url:NSString = (info!["PHImageFileUTIKey"] as? NSString)!
+                        completion(file_url as String)
+                      }
+                      else {
                         let file_url:URL = info!["PHImageFileURLKey"] as! URL
-//                        let mime_type = self.mimeTypes[file_url.pathExtension.lowercased()]!
                         completion(file_url.relativePath)
+                      }
                     }
                 }
             }
@@ -609,8 +614,8 @@ final class PhotoLibraryService {
                 }
 
                 self.putMediaToAlbum(assetsLibrary, url: assetUrl, album: album, completion: { (error) in
-  
-                    
+
+
                     if error != nil {
                         completion(nil, error)
                     } else {
