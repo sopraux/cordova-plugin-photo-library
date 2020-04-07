@@ -220,9 +220,14 @@ final class PhotoLibraryService {
                         completion(nil)
                     }
                     else {
+                      if #available(iOS 13, *) {
                         let file_url:NSString = (info!["PHImageFileUTIKey"] as? NSString)!
-//                        let mime_type = self.mimeTypes[file_url.pathExtension.lowercased()]!
-                        completion(file_url as String, libraryItem)
+                        completion(file_url as String)
+                      }
+                      else {
+                        let file_url:URL = info!["PHImageFileURLKey"] as! URL
+                        completion(file_url.relativePath)
+                      }
                     }
                 }
             }
